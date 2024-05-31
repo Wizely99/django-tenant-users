@@ -1,3 +1,5 @@
+from typing import Optional
+
 from django.contrib.auth import get_user_model
 from django.db import connection
 from django_tenants.utils import (
@@ -25,7 +27,7 @@ def create_public_tenant(
     *,
     is_superuser: bool = False,
     is_staff: bool = False,
-    tenant_extra_data=None,
+    tenant_extra_data: Optional[dict] = None,
     **owner_extra,
 ):
     """Creates a public tenant and assigns an owner user.
@@ -97,6 +99,6 @@ def create_public_tenant(
         profile.set_password(owner_extra["password"])
     else:
         profile.set_unusable_password()
-    profile.save()
+    profile.save(update_fields=["password"])
 
     return public_tenant, domain, profile
